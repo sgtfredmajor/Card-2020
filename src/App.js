@@ -1,26 +1,54 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
+import 'bulma/css/bulma.css';
+import { Container, Content} from 'bloomer/lib/layout/Container';
+import ProfileCardList from './components/ProfileCardList';
 import './App.css';
+import { } from 'bloomer/lib/elements/Content';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  state = {
+    userData: [],
+    title: 'Random People'
+    
+  };
+
+  loadData = async () => {
+    const response = await fetch('https://randomuser.me/api/?results=6');
+    const data = await response.json();
+    return data.results;
+  };
+
+  handleClick = async () => {
+    const newUserData = await this.loadData();
+
+    this.setState({
+      userData: newUserData
+    });
+  };
+
+  async componentDidMount() {
+    const userData = await this.loadData();
+
+    this.setState({
+      userData: userData
+    });
+  }
+
+  render() {
+    const { title, userData } = this.state;
+    return (
+      
+    <Container>
+      <h3 class="title is-3">{title}</h3>
+    
+  
+        <button onClick={this.handleClick}>Click here: next group</button>
+        <ProfileCardList userData={userData} />
+
+     </Container>
+    
+    );
+  }
 }
 
 export default App;
